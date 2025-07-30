@@ -1,7 +1,3 @@
-Perfect. Here’s a **tailored `README.md`** for your project [`SecuritySecretsIAM`](https://github.com/Syamel111/SecuritySecretsIAM.git), based on what you’ve learned and achieved:
-
----
-
 ```markdown
 # 🔐 SecuritySecretsIAM
 
@@ -107,10 +103,5 @@ terraform destroy
 **Mini Project 3 — Security, Secrets, IAM Edge Cases**
 Part of 2-month AWS cloud job readiness plan
 
-```
-
----
-
-You can copy-paste this into your repo's `README.md`. Let me know if you want to tweak the title, lessons, or structure. You're safe to rest — and yes, you’re on track ✅.
 ```
 
