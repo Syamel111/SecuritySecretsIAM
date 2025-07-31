@@ -103,7 +103,6 @@ terraform destroy
 **Mini Project 3 — Security, Secrets, IAM Edge Cases**
 Part of 2-month AWS cloud job readiness plan
 
-Here’s a detailed `README.md` section you can add to your main GitHub repo to document the retry attempt of Mini Project 3 (Secrets Rotation):
 
 ---
 
