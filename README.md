@@ -103,3 +103,89 @@ terraform destroy
 **Mini Project 3 — Security, Secrets, IAM Edge Cases**
 Part of 2-month AWS cloud job readiness plan
 
+Here’s a detailed `README.md` section you can add to your main GitHub repo to document the retry attempt of Mini Project 3 (Secrets Rotation):
+
+---
+
+## 🔁 Mini Project 3 – Secrets Rotation (Retry Attempt)
+
+### ⏪ Purpose of Retry
+
+After completing Mini Project 3 (Secrets Rotation using AWS Secrets Manager and Lambda), a retry was attempted to:
+
+* Rebuild the full infrastructure from scratch using Terraform
+* Fix the previous **AccessDeniedException** related to Lambda trust policies
+* Manually trigger and observe a successful secret rotation cycle
+
+---
+
+### ✅ Changes Implemented in Retry
+
+* **Recreated all secrets infrastructure via Terraform**:
+
+  * `aws_secretsmanager_secret`
+  * `aws_lambda_function` (custom rotation Lambda)
+  * `aws_secretsmanager_secret_rotation` resource
+* **IAM trust policy updated** to allow `secretsmanager.amazonaws.com` to invoke the Lambda:
+
+  ```hcl
+  statement {
+    effect = "Allow"
+    actions = ["lambda:InvokeFunction"]
+    principals {
+      type        = "Service"
+      identifiers = ["secretsmanager.amazonaws.com"]
+    }
+    condition {
+      test     = "ArnLike"
+      variable = "AWS:SourceArn"
+      values   = [aws_secretsmanager_secret.rotating_secret.arn]
+    }
+  }
+  ```
+
+---
+
+### ⚠️ Rotation Failure (Again)
+
+Despite the correct IAM setup and successful apply of all resources, rotation still failed with the error:
+
+```
+Failed to rotate the secret "MyRotatingSecret".
+A previous rotation isn't complete. That rotation will be reattempted.
+```
+
+Additional checks revealed:
+
+* No new version in Secrets Manager (`AWSPENDING` version missing)
+* The stuck state persisted even after disabling and re-enabling rotation
+* No way to forcefully cancel the ongoing (stuck) rotation from the console or API
+
+---
+
+### ❌ Outcome
+
+* **No successful rotation occurred**
+* Rotation remained **stuck due to an incomplete previous cycle**
+* Decided **not to push the retry code** to GitHub, as it’s functionally the same as the first version
+
+---
+
+### ✅ Lessons Learned
+
+* Gained deeper understanding of how **Secrets Manager rotation state works**
+* Practiced full **Terraform infrastructure rebuild** and teardown
+* Identified the exact trust relationship needed for Secrets Manager to invoke Lambda
+* Realized AWS does **not allow aborting a stuck rotation cycle manually**, making some failures unrecoverable without a new secret
+
+---
+
+### 📌 Takeaway
+
+This retry reinforced the realities of production cloud infrastructure:
+
+* Some issues (like a stuck rotation) may require **abandoning the resource** entirely
+* It's crucial to test rotation logic early and thoroughly before enabling it in production
+* Managing stateful AWS services like Secrets Manager involves **more than just Terraform**—manual intervention is sometimes needed
+
+---
