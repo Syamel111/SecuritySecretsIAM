@@ -1,4 +1,3 @@
-```markdown
 # 🔐 SecuritySecretsIAM
 
 This project demonstrates real-world AWS security and IAM patterns through a **custom Secrets Manager Rotation Lambda**, managed via **Terraform**. It’s part of my 2-month cloud job readiness journey.
